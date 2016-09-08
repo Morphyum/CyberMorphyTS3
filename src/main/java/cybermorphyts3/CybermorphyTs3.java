@@ -25,14 +25,14 @@ public class CybermorphyTs3 {
 		Database.initialize();
 
 		final TS3Config config = new TS3Config();
-		config.setHost("81.169.139.136");
+		config.setHost(Config.ip);
 		config.setDebugLevel(Level.ALL);
 
 		final TS3Query query = new TS3Query(config);
 		query.connect();
 
 		final TS3Api api = query.getApi();
-		api.login("cybermorphyts3", "ostt02+g");
+		api.login(Config.username, Config.password);
 		api.selectVirtualServerById(2);
 		api.setNickname("CyberMorphy");
 
