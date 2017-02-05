@@ -50,6 +50,8 @@ public class CybermorphyTs3 {
 		// Register the event listener
 		api.addTS3Listeners(new TS3EventAdapter() {
 
+			Bet bet = new Bet();
+
 			@Override
 			public void onClientJoin(ClientJoinEvent e) {
 				api.sendPrivateMessage(e.getClientId(), Config.WELCOMEMESSAGE);
@@ -65,10 +67,18 @@ public class CybermorphyTs3 {
 					} else if (message.equalsIgnoreCase("!help")) {
 						api.sendPrivateMessage(api.getClientByUId(e.getInvokerUniqueId()).getId(), Config.HELPTEXT);
 					} else if (message.matches("[1-9]\\d*w[1-9]\\d*")) {
-						würfeln(message,e);
+						würfeln(message, e);
 					} else if (message.startsWith("!bier")) {
-						bierMessage(message,e);
-					}
+						bierMessage(message, e);
+					} else if (message.startsWith("!hearthpwn")) {
+						hearthpwn(e);
+					} else if (message.startsWith("!hearthmeta")) {
+						hearthmeta(e);
+					} else if (message.startsWith("!hearthtier")) {
+						hearthtier(e);
+					}// else if (message.startsWith("!bet")) {
+						// betMessage(message, e);
+						// }
 				}
 
 				// react to channel messages not sent by the query itself
@@ -78,7 +88,66 @@ public class CybermorphyTs3 {
 					}
 				}
 			}
+
+			private void hearthmeta(TextMessageEvent e) {
+				api.moveClient(clientId, api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
+				api.sendChannelMessage("Hier findest du das aktuelle Meta: [URL]https://tempostorm.com/hearthstone/meta-snapshot/[/URL]");
+
+			}
+
+			private void hearthpwn(TextMessageEvent e) {
+				api.moveClient(clientId, api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
+				api.sendChannelMessage(Config.HEARTHPWNT1);
+				api.sendChannelMessage(Config.HEARTHPWNT2);
+				api.sendChannelMessage(Config.HEARTHPWNT3);
+				api.sendChannelMessage(Config.HEARTHPWNT4);
+				api.sendChannelMessage(Config.HEARTHPWNT5);
+			}
 			
+			private void hearthtier(TextMessageEvent e) {
+				api.moveClient(clientId, api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
+				api.sendChannelMessage(Config.HEARTHTIERLIST);
+			}
+
+			// private void betMessage(String message, TextMessageEvent e) {
+			// message = message.replace("!bet ", "");
+			// if (message.startsWith("start")) {
+			// if (!bet.isBetstarted()) {
+			// message = message.replace("start ", "");
+			// bet = new Bet();
+			// bet.setBetstarted(true);
+			// bet.setBetoptions(message.split(" "));
+			// api.moveClient(clientId,
+			// api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
+			// api.sendChannelMessage(api.getClientByUId(e.getInvokerUniqueId()).getNickname()
+			// + " hat eine Wette gestartet\n Bitte schreibe mir privat welche
+			// option du wählst:");
+			// for (int i = 0; i < bet.getBetoptions().length; i++) {
+			// api.sendChannelMessage("!bet " + i + " [dein Einsatz] | " +
+			// bet.getBetoptions()[i]);
+			// }
+			// } else {
+			// api.moveClient(clientId,
+			// api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
+			// api.sendChannelMessage("Es läuft bereits eine Wette\n Bitte
+			// schreibe mir privat welche option du wählst:");
+			// for (int i = 0; i < bet.getBetoptions().length; i++) {
+			// api.sendChannelMessage("!bet " + i + "[dein Einsatz] | " +
+			// bet.getBetoptions()[i]);
+			// }
+			// }
+			// }
+			// else if (message.startsWith("end")) {
+			//
+			// } else {
+			// String[] userBet = message.split(" ");
+			// bet.getUserchoices().put(e.getInvokerUniqueId(),
+			// Integer.parseInt(userBet[0]));
+			// }
+			//
+			//
+			// }
+
 			private void youtube(String message) {
 				String[] texte = message.split(" ");
 				for (int i = 0; i < texte.length; i++) {
@@ -88,7 +157,7 @@ public class CybermorphyTs3 {
 						api.sendChannelMessage(Util.getYoutube(link));
 					}
 				}
-				
+
 			}
 
 			private void klingeln(TextMessageEvent e) {
@@ -108,7 +177,7 @@ public class CybermorphyTs3 {
 				api.sendChannelMessage(api.getClientByUId(e.getInvokerUniqueId()).getNickname() + " hat eine "
 						+ Integer.toString(Util.diceRoll(Integer.parseInt(messagepart[0]), Integer.parseInt(messagepart[1]))) + " mit " + e.getMessage()
 						+ " gewürfelt. ");
-				
+
 			}
 
 			private void bierMessage(String message, TextMessageEvent e) {
@@ -116,12 +185,12 @@ public class CybermorphyTs3 {
 				api.moveClient(clientId, api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
 				if (message.equalsIgnoreCase("+")) {
 					int beercount = Database.raiseBeerCount(e.getInvokerUniqueId());
-					api.sendChannelMessage(api.getClientByUId(e.getInvokerUniqueId()).getNickname() + " trinkt Bier Nummer " + beercount
-							+ " seit dem letzten reset. ");
+					api.sendChannelMessage(
+							api.getClientByUId(e.getInvokerUniqueId()).getNickname() + " trinkt Bier Nummer " + beercount + " seit dem letzten reset. ");
 				} else if (message.equalsIgnoreCase("-")) {
 					int beercount = Database.lowerBeerCount(e.getInvokerUniqueId());
-					api.sendChannelMessage(api.getClientByUId(e.getInvokerUniqueId()).getNickname() + " trinkt Bier Nummer " + beercount
-							+ " seit dem letzten reset. ");
+					api.sendChannelMessage(
+							api.getClientByUId(e.getInvokerUniqueId()).getNickname() + " trinkt Bier Nummer " + beercount + " seit dem letzten reset. ");
 				} else if (message.equalsIgnoreCase("reset")) {
 					Database.resetBeerCount(e.getInvokerUniqueId());
 					api.sendChannelMessage(api.getClientByUId(e.getInvokerUniqueId()).getNickname() + " 's Bierzähler wurde zurückgesetzt. ");
@@ -131,15 +200,13 @@ public class CybermorphyTs3 {
 						int beercount = Database.userBeerCount(client.getUniqueIdentifier());
 						api.sendChannelMessage(message + " trinkt Bier Nummer " + beercount + " seit dem letzten reset. ");
 					} else {
-						api.sendPrivateMessage(api.getClientByUId(e.getInvokerUniqueId()).getId(),message + " ist kein valider Nutzer. ");
+						api.sendPrivateMessage(api.getClientByUId(e.getInvokerUniqueId()).getId(), message + " ist kein valider Nutzer. ");
 					}
 				}
-				
+
 			}
 		});
-		
+
 	}
-	
-	
 
 }
