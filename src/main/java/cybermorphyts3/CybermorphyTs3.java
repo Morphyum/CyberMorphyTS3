@@ -13,6 +13,8 @@ import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.json.JSONObject;
+
 /**
  * A simple chat bot that responds to any channel messages starting with "hello"
  * by greeting the client who sent the message.<br>
@@ -76,7 +78,9 @@ public class CybermorphyTs3 {
 						hearthmeta(e);
 					} else if (message.startsWith("!hearthtier")) {
 						hearthtier(e);
-					}// else if (message.startsWith("!bet")) {
+					} else if (message.startsWith("!sr")) {
+						getPlayerSR(message, e);
+					} // else if (message.startsWith("!bet")) {
 						// betMessage(message, e);
 						// }
 				}
@@ -103,7 +107,7 @@ public class CybermorphyTs3 {
 				api.sendChannelMessage(Config.HEARTHPWNT4);
 				api.sendChannelMessage(Config.HEARTHPWNT5);
 			}
-			
+
 			private void hearthtier(TextMessageEvent e) {
 				api.moveClient(clientId, api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
 				api.sendChannelMessage(Config.HEARTHTIERLIST);
@@ -147,6 +151,23 @@ public class CybermorphyTs3 {
 			//
 			//
 			// }
+
+			private void getPlayerSR(String message, TextMessageEvent e) {
+				String[] texte = message.split(" ");
+				String urlToRead = "https://owapi.net/api/v3/u/" + texte[1] + "/stats";
+				String json = Util.getHTML(urlToRead);
+
+				JSONObject jobject = new JSONObject(json);
+				jobject = jobject.getJSONObject("eu");
+				jobject = jobject.getJSONObject("stats");
+				jobject = jobject.getJSONObject("competitive");
+				jobject = jobject.getJSONObject("overall_stats");
+				int comprank = jobject.getInt("comprank");
+
+				api.moveClient(clientId, api.getClientByUId(e.getInvokerUniqueId()).getChannelId());
+				api.sendChannelMessage(texte[1] + " hat ein SR von " + comprank);
+
+			}
 
 			private void youtube(String message) {
 				String[] texte = message.split(" ");

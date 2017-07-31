@@ -38,6 +38,7 @@ public final class Util {
 			url = new URL(urlToRead);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
+			conn.addRequestProperty("User-Agent", "Mozilla/4.76"); 
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			while ((line = rd.readLine()) != null) {
 				result += line;
